@@ -1,45 +1,24 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/resources/com/google/cloud/functions/invoker/config.yml
-!**/src/test/resources/com/google/cloud/functions/invoker/config.yml
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/resources/META-INF/persistence.xml
-!**/src/test/resources/META-INF/persistence.xml
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
-
-### OS ###
-.DS_Store
-Thumbs.db
-
-### Application ###
-boot_log.txt
-boot_log2.txt
+# Logs
+logs
 *.log
-*.temp
-/tmp/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

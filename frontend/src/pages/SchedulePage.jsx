@@ -1,31 +1,16 @@
-import { TeamBadge } from '../components/TeamComponents'
-
-const SCHEDULES = [
-  { id: 1, date: '3월 28일 (금)', time: '18:30', stadium: '잠실야구장',    home: 'LG',  away: 'DU' },
-  { id: 2, date: '3월 28일 (금)', time: '18:30', stadium: '인천SSG랜더스필드', home: 'SSG', away: 'KIA' },
-  { id: 3, date: '3월 28일 (금)', time: '18:30', stadium: '대구삼성라이온즈파크', home: 'SA',  away: 'LO' },
-  { id: 4, date: '3월 29일 (토)', time: '14:00', stadium: '수원KT위즈파크', home: 'KT',  away: 'NC' },
-  { id: 5, date: '3월 29일 (토)', time: '14:00', stadium: '한화생명이글스파크', home: 'HH',  away: 'WO' },
-]
+import ScheduleList from '../components/ScheduleList'
 
 export default function SchedulePage() {
+  const currentYear = new Date().getFullYear()
+
   return (
-    <div>
-      <div className="top-bar">
-        <h1><span className="icon">📅</span> 경기 일정</h1>
+    <div className="schedule-page">
+      <div className="page-header">
+        <h2 className="page-title">경기 일정</h2>
+        <p className="page-subtitle">KBO 리그 경기 일정과 결과를 확인하세요.</p>
       </div>
-      <div className="page-content" style={{ paddingTop: 8 }}>
-        {SCHEDULES.map(s => (
-          <div key={s.id} className="card">
-            <div className="card-meta">📅 {s.date} · {s.time} · {s.stadium}</div>
-            <div className="card-vs" style={{ marginTop: 8 }}>
-              <TeamBadge teamId={s.home} />
-              <span style={{ fontSize: 16, fontWeight: 700, color: '#999', margin: '0 8px' }}>VS</span>
-              <TeamBadge teamId={s.away} />
-            </div>
-          </div>
-        ))}
-      </div>
+
+      <ScheduleList year={currentYear} />
     </div>
   )
 }
