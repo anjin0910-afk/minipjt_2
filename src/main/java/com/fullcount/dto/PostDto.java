@@ -75,8 +75,21 @@ public class PostDto {
         private String awayTeamId;
         private Integer ticketPrice;
         private Integer maxParticipants;
+        private Integer currentCount; // 추가
         private String status;
         private Integer viewCount;
+        private LocalDateTime createdAt;
+    }
+
+    @Getter
+    @Builder
+    public static class ApplicationResponse {
+        private Long id;
+        private Long postId;
+        private Long applicantId;
+        private String applicantNickname;
+        private String message;
+        private String status;
         private LocalDateTime createdAt;
     }
 }

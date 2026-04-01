@@ -28,26 +28,18 @@ export default function MeetupDetailPage({ postId, onBack }) {
     const [isApplyModalOpen, setIsApplyModalOpen] = useState(false)
     const [tab, setTab] = useState('info') // 'info' | 'apply'
 
-    const isAuthor = user?.nickname === post?.authorNickname
+    const isAuthor = user && post && (user.nickname === post.authorNickname);
 
     // ── 데이터 조회 ───────────────────────────────────
     const fetchPost = async () => {
         try {
             setLoading(true)
-            // TODO: BE 연동 시 아래 코드로 교체
-            // const res = await getMeetupPost(id)
-            // setPost(res.data)
-
-            // 임시 더미 데이터
-            setPost({
-                id: 1, title: '잠실 LG vs 두산 같이 보실분!',
-                content: '같이 응원해요! 잠실 3루 응원석 자리 있어요. 처음 직관 오시는 분도 환영합니다. 치킨이랑 맥주 같이 먹어요 🍺⚾',
-                matchDate: '2026-04-05', homeTeamName: 'LG', awayTeamName: '두산',
-                stadium: '잠실야구장',
-                authorNickname: '테스트유저', teamName: 'LG', maxParticipants: 4,
-                currentCount: 1, status: 'OPEN', createdAt: '2026-04-01'
-            })
-        } catch {
+            const res = await getMeetupPost(id)
+            const postData = res.data.data;
+            setPost(postData)
+            console.log("게시글 로드 성공:", postData);
+        } catch (error) {
+            console.error('게시글 로드 실패:', error);
             alert('게시글을 불러오지 못했습니다.')
             onBack()
         } finally {
@@ -56,33 +48,43 @@ export default function MeetupDetailPage({ postId, onBack }) {
     }
 
     const fetchApplications = async () => {
+        if (!id) return;
         try {
+            console.log("신청자 목록 조회 시도 (postId):", id);
             const res = await getApplications(id)
-            setApplications(res.data)
-        } catch {
-            console.error('신청자 목록 로딩 실패')
+            setApplications(res.data.data || [])
+            console.log("신청자 목록 로드 성공:", res.data.data);
+        } catch (error) {
+            console.error('신청자 목록 로딩 실패:', error.response?.data || error.message);
         }
     }
 
     const fetchMyApplication = async () => {
+        if (!id || !user) return;
         try {
             const res = await getMyApplication(id)
-            setMyApplication(res.data)
-        } catch {
+            setMyApplication(res.data.data)
+        } catch (error) {
             setMyApplication(null)
         }
     }
 
     useEffect(() => {
         fetchPost()
-        // TODO: BE 연동 시 주석 해제
-        // if (user) fetchMyApplication()
     }, [id])
 
     useEffect(() => {
-        // TODO: BE 연동 시 주석 해제
-        // if (isAuthor) fetchApplications()
-    }, [post, isAuthor])
+        if (user && post) {
+            fetchMyApplication();
+        }
+    }, [id, user, post])
+
+    useEffect(() => {
+        // 작성자인 경우에만 신청자 목록을 가져옴
+        if (isAuthor) {
+            fetchApplications()
+        }
+    }, [isAuthor, post])
 
     // ── 핸들러 ────────────────────────────────────────
     const handleApply = async (message) => {

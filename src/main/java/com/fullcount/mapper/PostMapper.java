@@ -25,9 +25,25 @@ public class PostMapper {
                 .awayTeamId(post.getAwayTeam() != null ? post.getAwayTeam().getId().toString() : null)
                 .ticketPrice(post.getTicketPrice())
                 .maxParticipants(post.getMaxParticipants())
+                .currentCount(post.getCurrentCount()) // 추가
                 .status(post.getStatus().name())
                 .viewCount(post.getViewCount())
                 .createdAt(post.getCreatedAt())
+                .build();
+    }
+
+    // Application -> ApplicationResponse 변환
+    public static PostDto.ApplicationResponse toApplicationResponse(com.fullcount.domain.Application application) {
+        if (application == null) return null;
+
+        return PostDto.ApplicationResponse.builder()
+                .id(application.getId())
+                .postId(application.getPost().getId())
+                .applicantId(application.getApplicant().getId())
+                .applicantNickname(application.getApplicant().getNickname())
+                .message(application.getMessage())
+                .status(application.getStatus().name())
+                .createdAt(application.getCreatedAt())
                 .build();
     }
 

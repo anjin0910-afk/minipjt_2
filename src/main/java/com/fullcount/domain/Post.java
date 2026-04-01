@@ -58,6 +58,10 @@ public class Post {
     /** MEETUP 전용 - 최대 모집 인원 */
     private Integer maxParticipants;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer currentCount = 1; // 작성자 본인 포함
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     @Builder.Default
@@ -101,5 +105,24 @@ public class Post {
 
     public void incrementViewCount() {
         this.viewCount++;
+    }
+
+    public void addParticipant() {
+        if (this.maxParticipants != null && this.currentCount >= this.maxParticipants) {
+            throw new IllegalStateException("이미 모집 인원이 찼습니다.");
+        }
+        this.currentCount++;
+        if (this.maxParticipants != null && this.currentCount.equals(this.maxParticipants)) {
+            this.status = PostStatus.CLOSED;
+        }
+    }
+
+    public void removeParticipant() {
+        if (this.currentCount > 1) {
+            this.currentCount--;
+            if (this.status == PostStatus.CLOSED) {
+                this.status = PostStatus.OPEN;
+            }
+        }
     }
 }

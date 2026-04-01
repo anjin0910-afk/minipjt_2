@@ -78,7 +78,8 @@ export default function MeetupPage({ onSelectPost, initialOpen }) {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await api.get('/posts'); // BE 엔드포인트에 맞춰 수정
+        // boardType=MEETUP 파라미터를 추가하여 직관 메이트 게시글만 필터링해서 가져옴
+        const response = await api.get('/posts', { params: { boardType: 'MEETUP' } }); 
         setPosts(response.data.data); // 래퍼 내부의 실제 데이터(PagedResponse)를 저장
       } catch (error) {
         console.error("데이터 로드 실패:", error);
@@ -94,7 +95,12 @@ export default function MeetupPage({ onSelectPost, initialOpen }) {
     const rawData = posts?.content || (Array.isArray(posts) ? posts : []);
     return rawData.filter(p => {
       const teamMatch = filterTeam === 'ALL' || p.homeTeamName === filterTeam || p.awayTeamName === filterTeam || p.teamName === filterTeam;
-      const statusMatch = filterStatus === 'ALL' || p.status === filterStatus;
+      
+      // UI의 'FULL' 상태와 백엔드의 'CLOSED' 상태를 매칭
+      const statusMatch = filterStatus === 'ALL' || 
+                         (filterStatus === 'FULL' && p.status === 'CLOSED') || 
+                         p.status === filterStatus;
+      
       return teamMatch && statusMatch;
     });
   }, [posts, filterTeam, filterStatus]);
