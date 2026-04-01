@@ -15,14 +15,18 @@ public class PostMapper {
                 .id(post.getId())
                 .authorNickname(post.getAuthor().getNickname())
                 .teamName(post.getTeam() != null ? post.getTeam().getName() : null)
+                .teamShortName(post.getTeam() != null ? post.getTeam().getShortName() : null) // 추가
                 .boardType(post.getBoardType().name())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .matchDate(post.getMatchDate())
                 .homeTeamName(post.getHomeTeam() != null ? post.getHomeTeam().getName() : null)
+                .homeTeamShortName(post.getHomeTeam() != null ? post.getHomeTeam().getShortName() : null) // 추가
                 .homeTeamId(post.getHomeTeam() != null ? post.getHomeTeam().getId().toString() : null)
                 .awayTeamName(post.getAwayTeam() != null ? post.getAwayTeam().getName() : null)
+                .awayTeamShortName(post.getAwayTeam() != null ? post.getAwayTeam().getShortName() : null) // 추가
                 .awayTeamId(post.getAwayTeam() != null ? post.getAwayTeam().getId().toString() : null)
+                .stadium(post.getHomeTeam() != null ? post.getHomeTeam().getHomeStadium() : null) // 추가
                 .ticketPrice(post.getTicketPrice())
                 .maxParticipants(post.getMaxParticipants())
                 .currentCount(post.getCurrentCount()) // 추가

@@ -65,14 +65,18 @@ public class PostDto {
         private Long id;
         private String authorNickname;
         private String teamName;
+        private String teamShortName; // 추가
         private String boardType;
         private String title;
         private String content;
         private LocalDate matchDate;
         private String homeTeamName;
+        private String homeTeamShortName; // 추가
         private String homeTeamId;
         private String awayTeamName;
+        private String awayTeamShortName; // 추가
         private String awayTeamId;
+        private String stadium; // 추가
         private Integer ticketPrice;
         private Integer maxParticipants;
         private Integer currentCount; // 추가

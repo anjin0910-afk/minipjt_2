@@ -1,20 +1,20 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { TeamFilter, TEAMS } from '../components/TeamComponents'
+import { TeamFilter, TEAMS, TEAM_NAME } from '../components/TeamComponents'
 import { StatusBadge } from "../components/StatusBadge"
 import api from '../api/api'
 
 // 팀별 컬러 정의 (디자인 포인트)
 const TEAM_COLORS = {
-  "두산": "#1a1748", "LG": "#C8102E", "SSG": "#CE0E2D",
-  "키움": "#820024", "KT": "#1b1a1a", "삼성": "#074CA1",
-  "한화": "#F37321", "NC": "#1D467A", "롯데": "#002561",
+  "DU": "#1a1748", "LG": "#C8102E", "SSG": "#CE0E2D",
+  "WO": "#820024", "KT": "#1b1a1a", "SA": "#074CA1",
+  "HH": "#F37321", "NC": "#1D467A", "LO": "#002561",
   "KIA": "#EA0029",
 };
 
 // ─── 컴포넌트: 모집 카드 ───────────────────────────────────────────
 function MeetupCard({ post, user, onClick, onDelete }) {
-  const color = TEAM_COLORS[post.teamName] || "#ef4b5f";
+  const color = TEAM_COLORS[post.teamShortName] || "#ef4b5f";
   const isFull = (post.currentCount || 0) >= (post.maxParticipants || 1);
   const ratio = (post.currentCount || 0) / (post.maxParticipants || 1);
 
@@ -31,13 +31,14 @@ function MeetupCard({ post, user, onClick, onDelete }) {
       <div style={{ padding: "20px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
           <span style={{ fontSize: '11px', fontWeight: '800', color: color, background: color + "15", border: `1px solid ${color}30`, padding: "4px 10px", borderRadius: '12px' }}>
-            {post.teamName}
+            {/* teamName 대신 TEAM_NAME 매핑을 통해 보기 좋은 이름 출력 */}
+            {TEAM_NAME[post.teamShortName] || post.teamName}
           </span>
           <StatusBadge status={post.status} />
         </div>
         <div style={{ marginBottom: 10, fontSize: '16px', fontWeight: '800', color: '#222' }}>{post.title}</div>
         <div style={{ marginBottom: 16, display: 'flex', gap: 10, fontSize: '12px', color: '#999' }}>
-          <span>🏟️ {post.stadium}</span>
+          <span>🏟️ {post.stadium || '장소 미정'} ({TEAM_NAME[post.homeTeamShortName] || '홈'} vs {TEAM_NAME[post.awayTeamShortName] || '어웨이'})</span>
           <span>📅 {post.matchDate}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -94,7 +95,11 @@ export default function MeetupPage({ onSelectPost, initialOpen }) {
     // PagedResponse의 경우 실제 데이터는 content 필드에 있음
     const rawData = posts?.content || (Array.isArray(posts) ? posts : []);
     return rawData.filter(p => {
-      const teamMatch = filterTeam === 'ALL' || p.homeTeamName === filterTeam || p.awayTeamName === filterTeam || p.teamName === filterTeam;
+      // filterTeam은 'DU', 'LG' 등 ID(ShortName) 형식이므로 shortName 필드와 비교
+      const teamMatch = filterTeam === 'ALL' || 
+                         p.homeTeamShortName === filterTeam || 
+                         p.awayTeamShortName === filterTeam || 
+                         p.teamShortName === filterTeam;
       
       // UI의 'FULL' 상태와 백엔드의 'CLOSED' 상태를 매칭
       const statusMatch = filterStatus === 'ALL' || 
